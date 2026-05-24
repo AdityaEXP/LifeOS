@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LifeOS | Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+
+    body {
+      font-family: "Space Grotesk", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(251, 191, 36, 0.18), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.15), transparent 30%),
+        linear-gradient(160deg, #020617 0%, #0f172a 55%, #111827 100%);
+    }
+
+    [data-variant="success"] {
+      color: #bbf7d0;
+      border-color: rgba(74, 222, 128, 0.35);
+      background: rgba(20, 83, 45, 0.35);
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-100">
+  <main class="mx-auto min-h-screen max-w-7xl px-6 py-8 lg:px-10">
+    <header class="flex flex-col gap-4 border-b border-white/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="text-xs uppercase tracking-[0.4em] text-amber-300/80">LifeOS</p>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-white">Dashboard</h1>
+      </div>
+      <a href="./home.html" class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 transition hover:bg-white/10">Back home</a>
+    </header>
+
+    <section class="mt-8 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+      <div class="rounded-[2rem] border border-white/10 bg-white/5 p-8 shadow-2xl shadow-black/30 backdrop-blur-xl">
+        <p class="text-sm uppercase tracking-[0.3em] text-slate-400">Current session</p>
+        <h2 class="mt-4 text-4xl font-bold tracking-tight text-white">Hello, <span id="username">Member</span></h2>
+        <p class="mt-4 text-lg text-slate-300">Your profile is coming from the <span class="text-amber-200">/users/me</span> endpoint.</p>
+
+        <div id="dashboard-status" class="mt-6 rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3 text-sm text-slate-200">Checking your session...</div>
+
+        <div class="mt-8 grid gap-4 sm:grid-cols-2">
+          <div class="rounded-3xl border border-white/10 bg-slate-950/50 p-5">
+            <p class="text-sm text-slate-400">Email</p>
+            <p id="email" class="mt-2 text-lg text-white">Loading...</p>
+          </div>
+          <div class="rounded-3xl border border-white/10 bg-slate-950/50 p-5">
+            <p class="text-sm text-slate-400">Member ID</p>
+            <p id="member-id" class="mt-2 text-lg text-white">Loading...</p>
+          </div>
+        </div>
+
+        <a href="./chatbot.html" class="mt-6 block rounded-3xl border border-sky-300/20 bg-sky-300/10 p-5 text-slate-200 transition hover:border-sky-300/40 hover:bg-sky-300/15">
+          <p class="text-sm text-sky-200">Chat assistant</p>
+          <p class="mt-2">Open the chatbot interface and ask questions against your uploaded documents.</p>
+        </a>
+      </div>
+
+      <aside class="rounded-[2rem] border border-white/10 bg-slate-950/50 p-8 shadow-2xl shadow-black/30 backdrop-blur-xl">
+        <p class="text-sm uppercase tracking-[0.3em] text-slate-400">Actions</p>
+        <div class="mt-6 space-y-4">
+          <a href="./files.html" class="block rounded-3xl border border-amber-300/20 bg-amber-300/10 p-5 text-slate-200 transition hover:border-amber-300/40 hover:bg-amber-300/15">
+            <p class="text-sm text-amber-200">PDF library</p>
+            <p class="mt-2">Open your uploaded PDFs, add new files, and review their processing status.</p>
+          </a>
+          <div class="rounded-3xl border border-white/10 bg-white/5 p-5 text-slate-200">
+            <p class="text-sm text-slate-400">Session strategy</p>
+            <p class="mt-2">The access token is stored in local storage, while the refresh token stays in the backend cookie.</p>
+          </div>
+          <div class="rounded-3xl border border-white/10 bg-white/5 p-5 text-slate-200">
+            <p class="text-sm text-slate-400">API connection</p>
+            <p class="mt-2">If the token is missing or invalid, you are sent back to the auth screen.</p>
+          </div>
+          <button id="sign-out" class="w-full rounded-2xl bg-amber-300 px-5 py-3 font-semibold text-slate-950 transition hover:bg-amber-200">Sign out</button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script type="module" src="./assets/js/dashboard.js"></script>
+</body>
+</html>

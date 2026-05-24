@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LifeOS | Chatbot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+
+    body {
+      font-family: "Space Grotesk", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(250, 204, 21, 0.2), transparent 28%),
+        radial-gradient(circle at right center, rgba(14, 165, 233, 0.16), transparent 26%),
+        linear-gradient(160deg, #020617 0%, #0f172a 48%, #111827 100%);
+    }
+
+    .chat-scrollbar::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .chat-scrollbar::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 999px;
+    }
+
+    .chat-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.35);
+      border-radius: 999px;
+    }
+
+    [data-variant="error"] {
+      color: #fecaca;
+      border-color: rgba(248, 113, 113, 0.35);
+      background: rgba(127, 29, 29, 0.35);
+    }
+
+    [data-variant="success"] {
+      color: #bbf7d0;
+      border-color: rgba(74, 222, 128, 0.35);
+      background: rgba(20, 83, 45, 0.35);
+    }
+
+    [data-variant="neutral"] {
+      color: #e2e8f0;
+      border-color: rgba(148, 163, 184, 0.2);
+      background: rgba(2, 6, 23, 0.55);
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-100">
+  <main class="mx-auto flex h-screen max-w-7xl flex-col overflow-hidden px-6 py-8 lg:px-10">
+    <header class="flex flex-col gap-4 border-b border-white/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p class="text-xs uppercase tracking-[0.4em] text-amber-300/80">LifeOS</p>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-white">Chat assistant</h1>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href="./dashboard.html" class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 transition hover:bg-white/10">Back to dashboard</a>
+        <a href="./files.html" class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 transition hover:bg-white/10">PDF library</a>
+      </div>
+    </header>
+
+    <section class="mt-8 grid min-h-0 flex-1 gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+      <aside class="rounded-[2rem] border border-white/10 bg-white/5 p-8 shadow-2xl shadow-black/30 backdrop-blur-xl lg:overflow-hidden">
+        <p class="text-sm uppercase tracking-[0.3em] text-slate-400">Assistant</p>
+        <h2 class="mt-4 text-4xl font-bold tracking-tight text-white">Ask questions from your uploaded PDFs</h2>
+        <p class="mt-4 text-slate-300">This interface sends your message to the authenticated <span class="text-amber-200">/query/</span> route and streams the reply into the conversation.</p>
+
+        <div id="chat-status" class="mt-6 rounded-2xl border px-4 py-3 text-sm text-slate-200">Connecting to your session...</div>
+
+        <div class="mt-8 space-y-4">
+          <button type="button" data-prompt="Summarize the key points from my documents." class="w-full rounded-3xl border border-white/10 bg-slate-950/50 px-5 py-4 text-left text-slate-200 transition hover:border-amber-300/30 hover:bg-slate-950/70">
+            <span class="block text-xs uppercase tracking-[0.3em] text-slate-500">Quick prompt</span>
+            <span class="mt-2 block text-sm">Summarize the key points from my documents.</span>
+          </button>
+          <button type="button" data-prompt="What topics do my PDFs cover?" class="w-full rounded-3xl border border-white/10 bg-slate-950/50 px-5 py-4 text-left text-slate-200 transition hover:border-amber-300/30 hover:bg-slate-950/70">
+            <span class="block text-xs uppercase tracking-[0.3em] text-slate-500">Quick prompt</span>
+            <span class="mt-2 block text-sm">What topics do my PDFs cover?</span>
+          </button>
+          <button type="button" data-prompt="Find the most important action items in my files." class="w-full rounded-3xl border border-white/10 bg-slate-950/50 px-5 py-4 text-left text-slate-200 transition hover:border-amber-300/30 hover:bg-slate-950/70">
+            <span class="block text-xs uppercase tracking-[0.3em] text-slate-500">Quick prompt</span>
+            <span class="mt-2 block text-sm">Find the most important action items in my files.</span>
+          </button>
+        </div>
+      </aside>
+
+      <section class="flex min-h-0 flex-col rounded-[2rem] border border-white/10 bg-slate-950/50 shadow-2xl shadow-black/30 backdrop-blur-xl">
+        <div class="border-b border-white/10 p-6 sm:p-8">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p class="text-sm uppercase tracking-[0.3em] text-slate-400">Conversation</p>
+              <h2 class="mt-3 text-3xl font-bold tracking-tight text-white">Document chatbot</h2>
+            </div>
+            <button id="clear-chat" type="button" class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 transition hover:bg-white/10">Clear chat</button>
+          </div>
+        </div>
+
+        <div id="chat-messages" class="chat-scrollbar min-h-0 flex-1 space-y-5 overflow-y-auto px-6 py-6 sm:px-8"></div>
+
+        <form id="chat-form" class="border-t border-white/10 p-4 sm:p-6">
+          <div class="rounded-[1.75rem] border border-white/10 bg-slate-950/70 p-3 shadow-inner shadow-black/30">
+            <label class="sr-only" for="chat-input">Ask a question</label>
+            <textarea id="chat-input" rows="3" maxlength="800" placeholder="Ask about your uploaded PDFs..." class="w-full resize-none border-0 bg-transparent px-3 py-2 text-base text-white placeholder:text-slate-500 focus:outline-none focus:ring-0"></textarea>
+
+            <div class="mt-3 flex flex-col gap-3 border-t border-white/10 pt-3 sm:flex-row sm:items-center sm:justify-between">
+              <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Powered by your query route</p>
+              <button id="send-button" type="submit" class="inline-flex items-center justify-center rounded-2xl bg-amber-300 px-5 py-3 font-semibold text-slate-950 transition hover:bg-amber-200 disabled:cursor-not-allowed disabled:bg-amber-300/50">Send message</button>
+            </div>
+          </div>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <script type="module" src="./assets/js/chatbot.js"></script>
+</body>
+</html>

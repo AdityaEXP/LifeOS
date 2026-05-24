@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LifeOS | Home</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+
+    body {
+      font-family: "Space Grotesk", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(250, 204, 21, 0.22), transparent 36%),
+        radial-gradient(circle at bottom right, rgba(251, 146, 60, 0.18), transparent 32%),
+        linear-gradient(160deg, #020617 0%, #0f172a 45%, #111827 100%);
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-100">
+  <main class="mx-auto flex min-h-screen max-w-7xl flex-col justify-between px-6 py-8 lg:px-10">
+    <header class="flex items-center justify-between">
+      <div>
+        <p class="text-xs uppercase tracking-[0.4em] text-amber-300/80">LifeOS</p>
+      </div>
+      <a href="./auth.html?mode=login" class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-slate-200 backdrop-blur transition hover:border-amber-300/50 hover:bg-white/10">Open app</a>
+    </header>
+
+    <section class="grid items-center gap-12 py-12 lg:grid-cols-[1.2fr_0.8fr]">
+      <div>
+        <p class="mb-4 inline-flex rounded-full border border-amber-300/25 bg-amber-300/10 px-4 py-1 text-sm text-amber-200">Simple auth flow for your dashboard</p>
+        <h1 class="max-w-3xl text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">A clean place to sign up, log in, and land in your dashboard.</h1>
+        <p class="mt-6 max-w-2xl text-lg leading-8 text-slate-300">Use the login and signup screens to create a session, then pull your profile from <span class="text-amber-200">/users/me</span> inside the dashboard.</p>
+
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a href="./auth.html?mode=signup" class="rounded-full bg-amber-300 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-200">Create account</a>
+          <a href="./auth.html?mode=login" class="rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:border-white/30 hover:bg-white/10">Log in</a>
+        </div>
+      </div>
+
+      <aside class="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-2xl shadow-black/30 backdrop-blur-xl">
+        <div class="rounded-3xl border border-white/10 bg-slate-950/50 p-5">
+          <p class="text-sm uppercase tracking-[0.3em] text-slate-400">Flow</p>
+          <div class="mt-6 space-y-4 text-sm text-slate-200">
+            <div class="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 px-4 py-3">1. Sign up or log in</div>
+            <div class="rounded-2xl border border-sky-400/20 bg-sky-400/10 px-4 py-3">2. Store the access token</div>
+            <div class="rounded-2xl border border-amber-400/20 bg-amber-400/10 px-4 py-3">3. Load /users/me in dashboard</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <footer class="flex items-center justify-between border-t border-white/10 pt-6 text-sm text-slate-400">
+      <span>Built for a Live Server workflow.</span>
+      <span>FastAPI + Tailwind + vanilla JS</span>
+    </footer>
+  </main>
+
+  <script type="module">
+    import { clearSession, isSessionValid } from "./assets/js/config.js";
+
+    (async () => {
+      const tokenValid = await isSessionValid().catch(() => false);
+
+      if (tokenValid) {
+        window.location.replace("./dashboard.html");
+        return;
+      }
+
+      clearSession();
+    })();
+  </script>
+</body>
+</html>
