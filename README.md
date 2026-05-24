@@ -8,26 +8,26 @@ The project is built as a backend-first system with a lightweight frontend dashb
 
 ```mermaid
 flowchart LR
-    U[User] --> F[Frontend\nHTML + Tailwind + JS]
+    U[User] --> F[Frontend]
     F --> A[FastAPI API]
 
-    A --> R[(Redis)\nLogin attempt tracking]
+    A --> R[(Redis rate-limit store)]
     A --> P[(PostgreSQL)]
-    P --> V[(pgvector\ndocument_chunks.embedding)]
+    P --> V[(pgvector embeddings)]
 
-    A --> O[OpenAI API\nEmbeddings + Chat Completion]
+    A --> O[OpenAI API]
 
     subgraph Ingestion Pipeline
         A --> UP[Upload PDF]
         UP --> TX[Extract text with PyMuPDF]
-        TX --> CH[Chunk text\nRecursive splitter]
+        TX --> CH[Chunk text (recursive splitter)]
         CH --> EM[Generate embeddings]
-        EM --> ST[Store chunks + vectors\ntransaction]
+        EM --> ST[Store chunks + vectors (transaction)]
     end
 
     subgraph Query Pipeline
         A --> QE[Embed query]
-        QE --> VS[Vector similarity search\n<=> operator]
+        QE --> VS[Vector similarity search]
         VS --> AG[Compose grounded prompt]
         AG --> ANS[Answer]
     end
