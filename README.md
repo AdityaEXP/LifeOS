@@ -242,8 +242,6 @@ Serve the `frontend` directory through any static server (for example VS Code Li
 
 ## Screenshots
 
-> Add project screenshots here.
-
 - `[Placeholder]` Authentication page
 - `[Placeholder]` Dashboard view
 - `[Placeholder]` File upload + processing status
