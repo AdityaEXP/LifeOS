@@ -11,7 +11,7 @@ flowchart LR
     U[User] --> F[Frontend]
     F --> A[FastAPI API]
 
-    A --> R[(Redis rate-limit store)]
+    A --> R[(Redis rate limit store)]
     A --> P[(PostgreSQL)]
     P --> V[(pgvector embeddings)]
 
@@ -20,9 +20,9 @@ flowchart LR
     subgraph Ingestion Pipeline
         A --> UP[Upload PDF]
         UP --> TX[Extract text with PyMuPDF]
-        TX --> CH[Chunk text (recursive splitter)]
+        TX --> CH[Chunk text recursive splitter]
         CH --> EM[Generate embeddings]
-        EM --> ST[Store chunks + vectors (transaction)]
+        EM --> ST[Store chunks vectors transaction]
     end
 
     subgraph Query Pipeline
