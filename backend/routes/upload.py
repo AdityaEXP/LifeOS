@@ -8,6 +8,9 @@ from services.auth import get_current_user
 
 from services.pdf_processing import process_pdf_pipeline, get_all_files_for_user
 
+from database import reddis_core
+
+
 router = APIRouter(prefix="/files", tags=["files"])
 
 UPLOAD_DIR = "uploads"
@@ -34,11 +37,19 @@ async def upload_file(file: UploadFile = File(...), current_user: dict = Depends
 
     async with aiofiles.open(file_path, "wb") as f:
         await f.write(content)
-
-    await process_pdf_pipeline(file_path, user_id=current_user["id"], original_filename=file.filename, stored_filename=unique_filename)
+    
+    await reddis_core.redis_pool.enqueue_job(
+        "process_pdf_job",
+        file_path,
+        current_user["id"],
+        file.filename,
+        unique_filename
+    )
+    # await process_pdf_pipeline(file_path, user_id=current_user["id"], original_filename=file.filename, stored_filename=unique_filename)
 
     return {
-        "message": "PDF uploaded successfully",
+        "message": "PDF queued for processing",
+        "status": "queued",
     }
 
 @router.get("/")

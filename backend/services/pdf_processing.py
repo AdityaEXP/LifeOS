@@ -1,6 +1,6 @@
 import fitz
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from database.db import database
+from database import db
 from core.openaiclient import client
 
 
@@ -56,7 +56,7 @@ async def generate_embeddings(chunks: list[str]):
 
 async def store_file_metadata(user_id, original_filename, stored_filename, status="processing"):
 
-    async with database.pool.acquire() as connection:
+    async with db.database.pool.acquire() as connection:
 
         result = await connection.fetchrow(
             """
@@ -74,7 +74,7 @@ async def store_file_metadata(user_id, original_filename, stored_filename, statu
     
 async def update_file_status(file_id, status):
 
-    async with database.pool.acquire() as connection:
+    async with db.database.pool.acquire() as connection:
 
         await connection.execute(
             """
@@ -90,7 +90,7 @@ async def store_document_chunks(meta_chunks, document_id):
 
     embeddings = await generate_embeddings([chunk["text"] for chunk in meta_chunks])
     if embeddings is not None:
-        async with database.pool.acquire() as connection:
+        async with db.database.pool.acquire() as connection:
 
             async with connection.transaction():
                 for i, (chunk, embed) in enumerate(
@@ -110,11 +110,15 @@ async def store_document_chunks(meta_chunks, document_id):
                     )
 
 async def process_pdf_pipeline(file_path, user_id, original_filename, stored_filename):
+    
     document_id = await store_file_metadata(
         user_id,
         original_filename,
         stored_filename
     )
+
+    await update_file_status(document_id, "processing")
+
 
     try:
         pages = extract_pdf_text(file_path)
@@ -127,7 +131,7 @@ async def process_pdf_pipeline(file_path, user_id, original_filename, stored_fil
 
 async def get_all_files_for_user(user_id):
 
-    async with database.pool.acquire() as connection:
+    async with db.database.pool.acquire() as connection:
 
         rows = await connection.fetch(
             """

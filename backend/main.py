@@ -4,6 +4,7 @@ from routes.users import router as users_router
 from routes.upload import router as files_router
 from routes.query import router as query_router
 from fastapi.middleware.cors import CORSMiddleware
+from database.reddis_core import init_redis
 import fastapi_swagger_dark as fsd
 from database.db import database
 
@@ -36,7 +37,8 @@ async def root():
 async def startup():
     await database.connect()
     await database.init_db()
-    print("Database connected")
+    await init_redis()
+    print("database and reddis along with rq connected!")
 
 
 @app.on_event("shutdown")
