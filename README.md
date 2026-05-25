@@ -41,6 +41,7 @@ flowchart LR
 - PDF upload endpoint with size and MIME checks
 - Async file writes via aiofiles
 - PDF text extraction using PyMuPDF
+- Redis-backed background queue for PDF ingestion (worker at backend/worker/pdf_worker.py)
 - Recursive chunking for context-preserving segmentation
 - Embedding generation with OpenAI (`text-embedding-3-small`)
 - Vector storage and similarity search with pgvector
@@ -249,7 +250,7 @@ Serve the `frontend` directory through any static server (for example VS Code Li
 
 ## Roadmap
 
-- Add background job queue for ingestion (Celery/RQ/Arq)
+- Background job queue for ingestion implemented (Redis worker at backend/worker/pdf_worker.py)
 - Stream query responses and token usage metrics
 - Add per-document filtering in query endpoint
 - Add hybrid retrieval (keyword + vector)
