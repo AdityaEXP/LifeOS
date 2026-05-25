@@ -19,7 +19,9 @@ flowchart LR
 
     subgraph Ingestion Pipeline
         A --> UP[Upload PDF]
-        UP --> TX[Extract text with PyMuPDF]
+        UP --> Q[Redis queue]
+        Q --> W[PDF worker]
+        W --> TX[Extract text with PyMuPDF]
         TX --> CH[Chunk text recursive splitter]
         CH --> EM[Generate embeddings]
         EM --> ST[Store chunks vectors transaction]
@@ -103,6 +105,9 @@ LifeOS/
 │   │   ├── user.py
 │   │   ├── pdf_processing.py
 │   │   └── query.py
+│   └── uploads/
+│   ├── worker/
+│   │   └── pdf_worker.py
 │   └── uploads/
 ├── frontend/
 │   ├── home.html
