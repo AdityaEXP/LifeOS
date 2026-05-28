@@ -3,6 +3,7 @@ from routes.auth import router as auth_router
 from routes.users import router as users_router
 from routes.upload import router as files_router
 from routes.query import router as query_router
+from routes.subjects import router as subjects_router
 from fastapi.middleware.cors import CORSMiddleware
 from database.reddis_core import init_redis
 import fastapi_swagger_dark as fsd
@@ -17,6 +18,7 @@ app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(files_router)
 app.include_router(query_router)
+app.include_router(subjects_router)
 
 app.add_middleware(
     CORSMiddleware,

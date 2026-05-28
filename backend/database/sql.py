@@ -41,10 +41,29 @@ CREATE TABLE IF NOT EXISTS document_chunks (
 );
 """
 
+SUBJECT = """
+CREATE TABLE IF NOT EXISTS subjects (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+"""
+
+SUBJECTS_FILES = """
+CREATE TABLE IF NOT EXISTS subject_files (
+    subject_id INTEGER REFERENCES subjects(id) ON DELETE CASCADE,
+    file_id INTEGER REFERENCES files(id) ON DELETE CASCADE,
+
+    PRIMARY KEY (subject_id, file_id)
+);
+"""
 
 ALL_QUERY = [
     USER_TABLE,
     REFRESH_TOKEN_TABLE,
     FILE_TABLE,
-    DOCUMENT_CHUNK_TABLE
+    DOCUMENT_CHUNK_TABLE,
+    SUBJECT,
+    SUBJECTS_FILES
 ]
